@@ -55,9 +55,13 @@ void ButtonRegisterLongPressCallback(TButton* Key, void *Callback)
 
 void ButtonRegisterRepetCallback(TButton* Key, void *Callback)
 {
-	Key->ButtonRepeat= Callback;
+	Key->ButtonRepeat = Callback;
 }
 
+void ButtonRegisterReleaseCallback(TButton* Key, void *Callback)
+{
+	Key->ButtonRelease = Callback;
+}
 
 //States routines
 
@@ -97,7 +101,7 @@ void ButtonPressedRoutine(TButton* Key)
 
 	if(GPIO_PIN_SET == HAL_GPIO_ReadPin(Key->GPIO_Port, Key->GPIO_Pin))
 	{
-		Key->State = IDLE;
+		Key->State = RELEASE;
 	}
 	else
 	{
@@ -119,7 +123,7 @@ void ButtonRepeatRoutine(TButton* Key)
 {
 	if(GPIO_PIN_SET == HAL_GPIO_ReadPin(Key->GPIO_Port, Key->GPIO_Pin))
 	{
-		Key->State = IDLE;
+		Key->State = RELEASE;
 	}
 	else
 	{
@@ -136,7 +140,21 @@ void ButtonRepeatRoutine(TButton* Key)
 
 }
 
+void ButtonReleaseRoutin(TButton* Key)
+{
 
+		Key->State = IDLE;
+		Key->LastTick = HAL_GetTick();
+
+
+
+		if(Key->ButtonRelease!= NULL)
+		{
+			Key->ButtonRelease();
+		}
+
+
+}
 
 //State machine
 void ButtonTask(TButton* Key)
@@ -154,8 +172,13 @@ void ButtonTask(TButton* Key)
 	case PRESSED:
 		ButtonPressedRoutine(Key);
 		break;
+
 	case REPEAT:
 		ButtonRepeatRoutine(Key);
+		break;
+
+	case RELEASE:
+		ButtonReleaseRoutin(Key);
 		break;
 	}
 }

@@ -52,6 +52,7 @@ void SystemClock_Config(void);
 void ToggleLed(void);
 void TurnOnLed(void);
 void TurnOffLed(void);
+void LedBlink(void);
 
 /* USER CODE END PFP */
 
@@ -94,6 +95,7 @@ int main(void)
   ButtonRegisterPressedCallback(&BlueKey, TurnOnLed);
   ButtonRegisterLongPressCallback(&BlueKey, TurnOffLed);
   ButtonRegisterRepetCallback(&BlueKey, ToggleLed);
+  ButtonRegisterReleaseCallback(&BlueKey, TurnOffLed);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -168,6 +170,12 @@ void TurnOnLed(void)
 void TurnOffLed(void)
 {
 	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+}
+
+void LedBlink(void)
+{
+	BlueKey.LastTick = HAL_GetTick();
+
 }
 
 /* USER CODE END 4 */

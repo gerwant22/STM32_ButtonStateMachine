@@ -15,7 +15,8 @@ typedef enum
 	IDLE = 0,
 	DEBOUNCE,
 	PRESSED,
-	REPEAT
+	REPEAT,
+	RELEASE
 } BUTTON_STATE;
 
 
@@ -40,6 +41,7 @@ typedef struct
 	void(*ButtonPresed)(void);
 	void(*ButtonLongPress)(void);
 	void(*ButtonRepeat)(void);
+	void(*ButtonRelease)(void);
 
 }TButton;
 
@@ -56,6 +58,9 @@ void ButtonInitKey(TButton* Key, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_Pin, uin
 void ButtonRegisterPressedCallback(TButton* Key, void *Callback);
 void ButtonRegisterLongPressCallback(TButton* Key, void *Callback);
 void ButtonRegisterRepetCallback(TButton* Key, void *Callback);
+void ButtonRegisterReleaseCallback(TButton* Key, void *Callback);
 
+
+//public variables
 
 #endif /* INC_BUTTON_H_ */
