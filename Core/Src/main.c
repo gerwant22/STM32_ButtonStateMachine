@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "button.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,12 +43,15 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+TButton BlueKey;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+void ToggleLed(void);
+void TurnOnLed(void);
+void TurnOffLed(void);
 
 /* USER CODE END PFP */
 
@@ -87,7 +90,10 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  ButtonInitKey(&BlueKey,B1_GPIO_Port, B1_Pin, 20, 2000, 500);
+  ButtonRegisterPressedCallback(&BlueKey, TurnOnLed);
+  ButtonRegisterLongPressCallback(&BlueKey, TurnOffLed);
+  ButtonRegisterRepetCallback(&BlueKey, ToggleLed);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -95,6 +101,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  ButtonTask(&BlueKey);
 
     /* USER CODE BEGIN 3 */
   }
@@ -148,6 +155,20 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void ToggleLed(void)
+{
+	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+}
+
+void TurnOnLed(void)
+{
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+}
+
+void TurnOffLed(void)
+{
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+}
 
 /* USER CODE END 4 */
 
