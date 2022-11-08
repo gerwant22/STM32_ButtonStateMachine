@@ -5,7 +5,7 @@
  *      Author: Daniel
  */
 
-##ifndef INC_BUTTON_H_
+#ifndef INC_BUTTON_H_
 #define INC_BUTTON_H_
 
 //states for state machine
