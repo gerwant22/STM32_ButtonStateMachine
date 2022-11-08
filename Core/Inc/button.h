@@ -38,6 +38,9 @@ typedef struct
 	uint32_t 		TimerLongPress;
 	uint32_t		TimerRepeat;
 
+	uint32_t		TimerRelease;
+	uint8_t			ReleaseLoopCount;
+
 	void(*ButtonPresed)(void);
 	void(*ButtonLongPress)(void);
 	void(*ButtonRepeat)(void);
@@ -52,8 +55,10 @@ void ButtonTask(TButton* Key);
 void ButtonSetDebounceTime(TButton* Key, uint32_t Miliseconds);
 void ButtonSetLongPressTime(TButton* Key, uint32_t Miliseconds);
 void ButtonSetRepeatTime(TButton* Key, uint32_t Miliseconds);
+void ButtonSetReleaseTime(TButton* Key, uint32_t Miliseconds);
 
-void ButtonInitKey(TButton* Key, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_Pin, uint32_t TimerDebounce, uint32_t TimerLongPress, uint32_t RepeatTimier);
+void ButtonInitKey(TButton* Key, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_Pin, uint32_t TimerDebounce, uint32_t TimerLongPress,
+		uint32_t TimerRepeat,uint32_t TimerRelease);
 
 void ButtonRegisterPressedCallback(TButton* Key, void *Callback);
 void ButtonRegisterLongPressCallback(TButton* Key, void *Callback);

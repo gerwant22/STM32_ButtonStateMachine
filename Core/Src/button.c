@@ -11,7 +11,8 @@
 
 //Button init
 
-void ButtonInitKey(TButton* Key, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_Pin, uint32_t TimerDebounce, uint32_t TimerLongPress, uint32_t TimerRepeat)
+void ButtonInitKey(TButton* Key, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_Pin, uint32_t TimerDebounce, uint32_t TimerLongPress,
+		uint32_t TimerRepeat,uint32_t TimerRelease)
 {
 	Key-> State = IDLE;
 
@@ -21,6 +22,8 @@ void ButtonInitKey(TButton* Key, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_Pin, uin
 	Key->TimerDebounce = TimerDebounce;
 	Key->TimerLongPress = TimerLongPress;
 	Key->TimerRepeat = TimerRepeat;
+	Key->TimerRelease = TimerRelease;
+	Key->ReleaseLoopCount = 0;
 
 }
 
@@ -37,6 +40,11 @@ void ButtonSetLongPressTime(TButton* Key, uint32_t Miliseconds)
 }
 
 void ButtonSetRepeatTime(TButton* Key, uint32_t Miliseconds)
+{
+	Key->TimerRepeat = Miliseconds;
+}
+
+void ButtonSetReleaseTime(TButton* Key, uint32_t Miliseconds)
 {
 	Key->TimerRepeat = Miliseconds;
 }
@@ -91,6 +99,7 @@ void ButtonDebounceRoutine(TButton* Key)
 		else
 		{
 			Key->State = IDLE;
+
 		}
 	}
 }
@@ -142,18 +151,33 @@ void ButtonRepeatRoutine(TButton* Key)
 
 void ButtonReleaseRoutin(TButton* Key)
 {
+//DAMN!!!!
+//	if(Key->ReleaseLoopCount != 0)
+//	{
+//		Key->LastTick = HAL_GetTick();
+//	}
+//
+//	if(((HAL_GetTick() - Key->LastTick) < Key->TimerRelease) && (Key->ReleaseLoopCount < 6) )
+//		{
+//			Key->LastTick = HAL_GetTick();
+//
+//			if((Key->ButtonRelease!= NULL) && ((HAL_GetTick() - Key->LastTick) < Key->TimerRelease) )
+//				{
+//					Key->ButtonRelease();
+//					Key->ReleaseLoopCount++;
+//				}
+//		}
+//	else
+//		{
+//			Key->State = IDLE;
+//			Key->ReleaseLoopCount = 0;
+//		}
 
-		Key->State = IDLE;
-		Key->LastTick = HAL_GetTick();
-
-
-
-		if(Key->ButtonRelease!= NULL)
+	if(Key->ButtonRelease!= NULL )
 		{
 			Key->ButtonRelease();
+			Key->State = IDLE;
 		}
-
-
 }
 
 //State machine
